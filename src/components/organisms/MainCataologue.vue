@@ -7,7 +7,7 @@ import { useCatalogueStore } from "../../stores/catalogueStore";
 const labelText = ref("Añadir nuevo video");
 const inputPlaceholder = ref("Añadir");
 const buttonLabel = ref("Añadir");
-let videosArray;
+const videosArray = ref();
 onMounted(() => {
   const catalogueStore = useCatalogueStore();
   catalogueStore.getYoutubeVideoInfo().then(() => {
@@ -16,9 +16,13 @@ onMounted(() => {
       return {
         id: video.id,
         thumbnail: video.snippet.thumbnails.default.url,
+        duration:
+          video.contentDetails.duration.split("PT")[1].split("M")[0] +
+          ":" +
+          video.contentDetails.duration.split("M")[1].split("S")[0],
       };
     });
-    videosArray = ref(videoListArray);
+    videosArray.value = videoListArray;
   });
 });
 </script>

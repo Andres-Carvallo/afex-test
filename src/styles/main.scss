@@ -3,8 +3,11 @@
 @import './atoms/labels';
 @import './atoms/inputs';
 @import './atoms/buttons';
+@import './atoms/cards';
 // molecules
 @import './molecules/top-bar';
+// Templates
+@import './molecules/catalogue';
 
 
 button{

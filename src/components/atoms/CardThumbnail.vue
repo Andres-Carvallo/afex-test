@@ -16,8 +16,9 @@ const closeImg = ref(new URL("../../assets/close.svg", import.meta.url).href);
 </script>
 
 <template>
-  <section class="">
-    <img :src="thumbnailImg" alt="Youtube Thumbnail" />
-    <img :src="closeImg" alt="Close Icon" />
+  <section class="thumbnail">
+    <img class="thumbnail--img" :src="thumbnailImg" alt="Youtube Thumbnail" />
+    <img class="thumbnail--close" :src="closeImg" alt="Close Icon" />
+    <p class="thumbnail--duration">{{ duration }}</p>
   </section>
 </template>

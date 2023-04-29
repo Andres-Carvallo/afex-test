@@ -11,6 +11,9 @@ const props = defineProps({
 
 <template>
   <section v-for="(video, index) in videosArray" :key="index" class="">
-    <CardThumbnail :thumbnail-img="video.thumbnail" />
+    <CardThumbnail
+      :thumbnail-img="video.thumbnail"
+      :duration="video.duration"
+    />
   </section>
 </template>

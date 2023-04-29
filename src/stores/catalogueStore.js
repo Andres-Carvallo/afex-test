@@ -19,7 +19,7 @@ export const useCatalogueStore = defineStore("catalogue", {
     },
     async getYoutubeVideoInfo() {
       await youtubeServices
-        .getYouTubeApi(["xUkeB99Sy_c", "5la4Ld3hwhI"])
+        .getYouTubeApi(["xUkeB99Sy_c", "5la4Ld3hwhI", "5la4Ld3hwhI"])
         .then((response) => {
           this.youtubeListInfo = response.data.items;
           return this.youtubeListInfo;
