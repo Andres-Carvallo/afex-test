@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "firebase": "^9.21.0",
+    "pinia": "^2.0.35",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

@@ -1,2 +1,11 @@
-// Atoms
-@import './atoms/labels';
+.main-label{
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28.329px;
+  line-height: 38px;
+  display: flex;
+  align-items: center;
+  color: #020202;
+  margin: 0;
+}

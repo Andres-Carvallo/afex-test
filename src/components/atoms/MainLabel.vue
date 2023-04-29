@@ -9,5 +9,5 @@ const props = defineProps({
 </script>
 
 <template>
-  <p>{{ text }}</p>
+  <p class="main-label">{{ text }}</p>
 </template>

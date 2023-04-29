@@ -1,0 +1,17 @@
+input::placeholder {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+  color: #929293;
+}
+
+.main-input{
+  padding: 19px 23px 20px 23px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px 0px 0px 5px;
+  width: 100%;
+}

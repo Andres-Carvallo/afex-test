@@ -1,24 +1,13 @@
-<script>
-import { ref } from "vue";
-
-export default {
-  setup() {
-    const count = ref(0);
-
-    // expose to template and other options API hooks
-    return {
-      count,
-    };
+<script setup>
+const props = defineProps({
+  buttonLabel: {
+    type: String,
+    required: true,
+    default: "",
   },
-
-  mounted() {
-    console.log(this.count); // 0
-  },
-};
+});
 </script>
 
 <template>
-  <section>
-    {{ "asd" }}
-  </section>
+  <button class="main-button">{{ buttonLabel }}</button>
 </template>
