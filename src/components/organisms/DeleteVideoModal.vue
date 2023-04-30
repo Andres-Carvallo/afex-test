@@ -1,6 +1,6 @@
 <script setup>
 import ModalHeader from "../molecules/ModalHeader.vue";
-import ModalContent from "../molecules/YoutubeModalContent.vue";
+
 import { ref, defineEmits } from "vue";
 import { storeToRefs } from "pinia";
 import { useCatalogueStore } from "../../stores/catalogueStore";
@@ -14,23 +14,10 @@ const handleChange = () => {
 // Stores
 const catalogueStore = useCatalogueStore();
 const { getYoutubeDetailInfo } = storeToRefs(catalogueStore);
-
-// Data
-const videoDetails = {
-  id: getYoutubeDetailInfo.value.id,
-  title: getYoutubeDetailInfo.value.snippet.title,
-  description: getYoutubeDetailInfo.value.snippet.description,
-};
-const videoInfo = ref(videoDetails);
 </script>
 
 <template>
   <v-card class="main-modal">
     <ModalHeader @close-modal="handleChange" />
-    <ModalContent
-      :id="videoInfo.id"
-      :title="videoInfo.title"
-      :description="videoInfo.description"
-    />
   </v-card>
 </template>

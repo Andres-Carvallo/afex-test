@@ -1,8 +1,16 @@
 <script setup>
 import { defineEmits } from "vue";
 import CardThumbnail from "../atoms/CardThumbnail.vue";
-
-const setModalEmit = defineEmits(["setInfoModal"]);
+const emit = defineEmits(["setInfoModal", "deleteVideo"]);
+const handleChange = (emitType, videoId) => {
+  console.log(emitType, videoId);
+  if (emitType === "setModal") {
+    emit("setInfoModal", videoId);
+  }
+  if (emitType === "deleteVideo") {
+    emit("deleteVideo", videoId);
+  }
+};
 const props = defineProps({
   videosArray: {
     type: Array,
@@ -18,7 +26,8 @@ const props = defineProps({
       <CardThumbnail
         :thumbnail-img="video.thumbnail"
         :duration="video.duration"
-        @click="$emit('setInfoModal', video.id)"
+        @delete-video="handleChange('deleteVideo', video.id)"
+        @set-modal="handleChange('setModal', video.id)"
       />
     </div>
   </section>

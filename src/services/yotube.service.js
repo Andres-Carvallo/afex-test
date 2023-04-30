@@ -1,7 +1,7 @@
 import { youTubeApi } from "../apis/main";
 import CONFIG from "../config";
 
-const youtubeInfoSnippet = "snippet,contentDetails,statistics,status";
+const youtubeInfoSnippet = "snippet,contentDetails";
 export default {
   getYouTubeApi(videoId) {
     return youTubeApi.get(

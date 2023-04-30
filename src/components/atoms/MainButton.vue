@@ -1,4 +1,9 @@
 <script setup>
+import { defineEmits } from "vue";
+const emit = defineEmits(["buttonClicked"]);
+const handleChange = () => {
+  emit("buttonClicked");
+};
 const props = defineProps({
   buttonLabel: {
     type: String,
@@ -9,5 +14,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <button class="main-button">{{ buttonLabel }}</button>
+  <button class="main-button" @click="handleChange()">
+    {{ buttonLabel }}
+  </button>
 </template>

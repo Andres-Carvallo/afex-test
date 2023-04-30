@@ -12,14 +12,22 @@ export const useCatalogueStore = defineStore("catalogue", {
       "https://www.youtube.com/watch?v=jYk3aqtzjwk&ab_channel=Skithuvudet",
     ],
     youtubeListInfo: null,
+    flags: {
+      clearInput: false,
+    },
   }),
   getters: {
     getYoutubeInfoList: (state) => state.youtubeListInfo,
     getYoutubeDetailInfo: (state) => state.mainVideoInfo,
+    getClearInputFlag: (state) => state.flags.clearInput,
   },
   actions: {
-    setYoutubeVideo({ link }) {
-      this.youtubeList.push(link);
+    setClearInputFlag({ boolean }) {
+      this.flags.clearInput = boolean;
+    },
+    setYoutubeVideo({ url }) {
+      this.youtubeList.push(url);
+      this.flags.clearInput = true;
       this.getYoutubeVideoInfo();
     },
     setVideoDetails(videoId) {

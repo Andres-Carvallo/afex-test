@@ -1,8 +1,11 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 import GeneralImage from "../atoms/GeneralImage.vue";
+const emit = defineEmits(["closeModal"]);
+const handleChange = () => {
+  emit("closeModal");
+};
 
-const setCloseModalEmit = defineEmits(["closeModal"]);
 const closeImg = ref(
   new URL("../../assets/close-dark.svg", import.meta.url).href
 );
@@ -14,7 +17,7 @@ const closeImg = ref(
       class="modal-header--close"
       :img-src="closeImg"
       :alt="'Close Icon'"
-      @click="$emit('closeModal')"
+      @click="handleChange"
     />
   </section>
 </template>
