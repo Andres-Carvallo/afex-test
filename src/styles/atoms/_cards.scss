@@ -1,4 +1,5 @@
 .thumbnail{
+  cursor: pointer;
   position: relative;
   width: 263px;
   height: 150px;
@@ -20,5 +21,6 @@
     bottom: 8px;
     right: 9px;
     color: white;
+    opacity: 0.8;
   }
 }

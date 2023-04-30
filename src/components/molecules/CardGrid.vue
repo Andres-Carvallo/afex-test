@@ -1,5 +1,8 @@
 <script setup>
+import { defineEmits } from "vue";
 import CardThumbnail from "../atoms/CardThumbnail.vue";
+
+const setModalEmit = defineEmits(["setInfoModal"]);
 const props = defineProps({
   videosArray: {
     type: Array,
@@ -10,10 +13,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <section v-for="(video, index) in videosArray" :key="index" class="">
-    <CardThumbnail
-      :thumbnail-img="video.thumbnail"
-      :duration="video.duration"
-    />
+  <section class="card-grid">
+    <div v-for="(video, index) in videosArray" :key="index">
+      <CardThumbnail
+        :thumbnail-img="video.thumbnail"
+        :duration="video.duration"
+        @click="$emit('setInfoModal', video.id)"
+      />
+    </div>
   </section>
 </template>

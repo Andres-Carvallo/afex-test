@@ -1,15 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 // Atoms
 @import './atoms/labels';
 @import './atoms/inputs';
 @import './atoms/buttons';
 @import './atoms/cards';
 // molecules
+@import './molecules/modals';
 @import './molecules/top-bar';
+@import './molecules/card-grid';
 // Templates
-@import './molecules/catalogue';
+@import './organisms/main-modal';
+// Templates
+@import './views/catalogue';
 
-
+body{
+  margin: 0;
+}
 button{
   border: none;
+}
+.v-overlay__scrim{
+  opacity: 0.5 !important;
 }

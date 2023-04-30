@@ -8,4 +8,24 @@
   align-items: center;
   color: #020202;
   margin: 0;
+  &--title{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 38px;
+    text-align: left;
+    color: #3C3E41;
+    margin-bottom: 16px;
+  }
+  &--content{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 25px;
+    color: #3C3E41;
+    margin-right: 57px;
+    text-align: left;
+  }
 }

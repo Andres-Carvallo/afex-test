@@ -1,15 +1,17 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineEmits } from "vue";
 import TopBar from "../molecules/TopBar.vue";
 import CardGrid from "../molecules/CardGrid.vue";
 import { useCatalogueStore } from "../../stores/catalogueStore";
 
+const catalogueStore = useCatalogueStore();
+const setModalEmit = defineEmits(["setInfoModal"]);
 const labelText = ref("Añadir nuevo video");
 const inputPlaceholder = ref("Añadir");
 const buttonLabel = ref("Añadir");
 const videosArray = ref();
-onMounted(() => {
-  const catalogueStore = useCatalogueStore();
+
+function getVideoDetails() {
   catalogueStore.getYoutubeVideoInfo().then(() => {
     const videoDetailsList = catalogueStore.getYoutubeInfoList;
     const videoListArray = videoDetailsList.map((video) => {
@@ -24,6 +26,10 @@ onMounted(() => {
     });
     videosArray.value = videoListArray;
   });
+}
+
+onMounted(() => {
+  getVideoDetails();
 });
 </script>
 
@@ -33,5 +39,9 @@ onMounted(() => {
     :input-placeholder="inputPlaceholder"
     :button-label="buttonLabel"
   />
-  <CardGrid v-if="videosArray" :videos-array="videosArray" />
+  <CardGrid
+    v-if="videosArray"
+    :videos-array="videosArray"
+    @set-info-modal="$emit('setInfoModal', $event)"
+  />
 </template>

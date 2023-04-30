@@ -3,5 +3,7 @@ import CatalogueTemp from "../templates/CatalogueTemp.vue";
 </script>
 
 <template>
-  <CatalogueTemp />
+  <section class="catalogue-template">
+    <CatalogueTemp />
+  </section>
 </template>

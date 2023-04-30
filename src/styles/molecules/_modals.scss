@@ -1,0 +1,23 @@
+.modal-header{
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+  &--close{
+    cursor: pointer;
+    margin-top: 37px;
+    width: 22px;
+  }
+}
+
+.modal-content{
+  display: flex;
+  &--info{
+    margin-left: 17px;
+    margin-right: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 460px;
+  }
+}
