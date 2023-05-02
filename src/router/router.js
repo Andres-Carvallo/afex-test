@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MainCatalogue from "../components/views/MainCatalogue.vue";
+import MainCatalogue from "../components/views/CatalogueView.vue";
 
 const mainCatalogue = MainCatalogue;
 

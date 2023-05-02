@@ -32,7 +32,7 @@ const props = defineProps({
 // Stores
 const catalogueStore = useCatalogueStore();
 const { getYoutubeDetailInfo } = storeToRefs(catalogueStore);
-const { deleteYoutubeVideo } = catalogueStore;
+const { deleteYoutubeVideo, setSnackbarFlag } = catalogueStore;
 
 // Funcs
 function setVideoInfo() {
@@ -52,7 +52,20 @@ function deleteVideo() {
     const fieldToDelete = {};
     const fieldId = props.selectedVideo;
     fieldToDelete[fieldId] = deleteField();
-    updateDoc(listRef, fieldToDelete);
+    updateDoc(listRef, fieldToDelete).catch(() => {
+      const snackbarObject = {
+        type: "error",
+        status: true,
+        text: "Ha ocurrido un error con Firebase",
+      };
+      return setSnackbarFlag({ snackbarObject });
+    });
+    const snackbarObject = {
+      type: "success",
+      status: true,
+      text: "Video eliminado con éxito",
+    };
+    setSnackbarFlag({ snackbarObject });
     deleteYoutubeVideo({ videoDbId: props.selectedVideo });
     handleChange();
   }

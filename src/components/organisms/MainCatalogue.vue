@@ -79,4 +79,11 @@ async function getVideoDetails() {
     @set-info-modal="handleChange('setInfoModal', $event)"
     @delete-video="handleChange('deleteVideo', $event)"
   />
+  <v-progress-circular
+    v-else
+    indeterminate
+    model-value="20"
+    size="80"
+    color="#136AE4"
+  ></v-progress-circular>
 </template>

@@ -6,7 +6,7 @@ import { useCatalogueStore } from "../../stores/catalogueStore";
 // Store
 const catalogueStore = useCatalogueStore();
 const { getClearInputFlag } = storeToRefs(catalogueStore);
-const { setClearInputFlag } = catalogueStore;
+const { clearInputFlag } = catalogueStore;
 
 // Emits
 const emit = defineEmits(["setInputValue"]);
@@ -26,7 +26,7 @@ watch(
   (currentValue) => {
     if (currentValue) {
       inputValue.value = "";
-      setClearInputFlag({ boolean: false });
+      clearInputFlag({ boolean: false });
       handleChange(null);
     }
   }

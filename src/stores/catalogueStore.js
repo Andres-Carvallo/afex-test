@@ -8,6 +8,11 @@ export const useCatalogueStore = defineStore("catalogue", {
     youtubeListInfo: null,
     flags: {
       clearInput: false,
+      snackbar: {
+        type: null,
+        status: false,
+        text: null,
+      },
     },
   }),
   getters: {
@@ -15,6 +20,7 @@ export const useCatalogueStore = defineStore("catalogue", {
     getYoutubeInfoList: (state) => state.youtubeListInfo,
     getYoutubeDetailInfo: (state) => state.mainVideoInfo,
     getClearInputFlag: (state) => state.flags.clearInput,
+    getSnackbarFlag: (state) => state.flags.snackbar,
   },
   actions: {
     setYoutubeDbList({ videoList }) {
@@ -26,8 +32,18 @@ export const useCatalogueStore = defineStore("catalogue", {
       });
       this.youtubeList = VideoFormattedList;
     },
-    setClearInputFlag({ boolean }) {
+    clearInputFlag({ boolean }) {
       this.flags.clearInput = boolean;
+    },
+    setSnackbarFlag({ snackbarObject }) {
+      this.flags.snackbar = snackbarObject;
+    },
+    clearSnackbarFlag() {
+      this.flags.snackbar = {
+        type: null,
+        status: false,
+        text: null,
+      };
     },
     setYoutubeVideo({ url }) {
       const videoInfo = {
@@ -38,7 +54,6 @@ export const useCatalogueStore = defineStore("catalogue", {
       this.flags.clearInput = true;
     },
     deleteYoutubeVideo({ videoDbId }) {
-      console.log(videoDbId);
       this.youtubeList = this.youtubeList.filter(
         (video) => video.id !== videoDbId
       );
@@ -53,7 +68,6 @@ export const useCatalogueStore = defineStore("catalogue", {
     async getYoutubeVideoInfo() {
       let responseList;
       const mainVideoList = await this.youtubeList.map((video) => {
-        console.log(video);
         if (
           video.url.includes("watch?v=") &&
           video.url.includes("&ab_channel=")
@@ -91,7 +105,6 @@ export const useCatalogueStore = defineStore("catalogue", {
             const source = {
               dbId: mainVideoList.find((video) => video.videoId === info.id).id,
             };
-            console.log(source);
             const newList = Object.assign(info, source);
             return newList;
           });
