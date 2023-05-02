@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import CatalogueTemp from "../templates/CatalogueTemp.vue";
 import { storeToRefs } from "pinia";
 import { useCatalogueStore } from "../../stores/catalogueStore";
@@ -8,6 +9,10 @@ const catalogueStore = useCatalogueStore();
 const { getSnackbarFlag } = storeToRefs(catalogueStore);
 const { clearSnackbarFlag } = catalogueStore;
 
+// Data
+const snackbarCloseText = ref("Cerrar");
+
+// Funcs
 function getSnackbarColor(snackbarType) {
   if (snackbarType === "error") {
     return "red";
@@ -29,7 +34,7 @@ function getSnackbarColor(snackbarType) {
       {{ getSnackbarFlag.text }}
       <template #actions>
         <v-btn color="white" variant="text" @click="clearSnackbarFlag">
-          Cerrar
+          {{ snackbarCloseText }}
         </v-btn>
       </template>
     </v-snackbar>

@@ -3,23 +3,18 @@ import { ref } from "vue";
 import MainLabel from "../atoms/MainLabel.vue";
 import MainInput from "../atoms/MainInput.vue";
 import MainButton from "../atoms/MainButton.vue";
-import { storeToRefs } from "pinia";
 import { useCatalogueStore } from "../../stores/catalogueStore";
-import { useFirestore } from "vuefire";
-import { doc, setDoc } from "firebase/firestore";
-
-// DB
-const db = useFirestore();
 
 // Store
 const catalogueStore = useCatalogueStore();
-const { getYoutubeDbList } = storeToRefs(catalogueStore);
-const { setYoutubeVideo, setSnackbarFlag } = catalogueStore;
+const { setYoutubeVideo } = catalogueStore;
 
 // Data
 const mainInputValue = ref("");
 const mainInputError = ref(false);
-
+const errorText = ref(
+  "Debe ingresar una URL Valida, Ej: https://www.youtube.com/watch?v=ei2n9iSyL38 o https://youtu.be/hjw7pCs4tD0"
+);
 // Props
 const props = defineProps({
   labelText: {
@@ -42,30 +37,13 @@ const props = defineProps({
 // Funcs
 
 function setVideo() {
+  console.log(mainInputValue.value);
   if (
     (mainInputValue.value &&
       mainInputValue.value.includes("watch?v=") &&
       mainInputValue.value.includes("youtube")) ||
-    mainInputValue.value.includes("youtu.be")
+    (mainInputValue.value && mainInputValue.value.includes("youtu.be"))
   ) {
-    const videoRef = doc(db, "youtube-list", "videos");
-    const videoObject = {};
-    const newId = getYoutubeDbList.value.slice(-1)[0].id + 1;
-    videoObject[newId] = mainInputValue.value;
-    setDoc(videoRef, videoObject, { merge: true }).catch(() => {
-      const snackbarObject = {
-        type: "error",
-        status: true,
-        text: "Ha ocurrido un error con Firebase",
-      };
-      return setSnackbarFlag({ snackbarObject });
-    });
-    const snackbarObject = {
-      type: "success",
-      status: true,
-      text: "Video guardado con éxito",
-    };
-    setSnackbarFlag({ snackbarObject });
     mainInputError.value = false;
     return setYoutubeVideo({ url: mainInputValue.value });
   }
@@ -90,7 +68,7 @@ function setInputValue(inputValue) {
       v-if="mainInputError"
       style="margin-top: 4px"
       error
-      :text="'Debe ingresar una URL Valida, Ej: https://www.youtube.com/watch?v=ei2n9iSyL38 o https://youtu.be/hjw7pCs4tD0'"
+      :text="errorText"
     />
   </section>
 </template>

@@ -3,10 +3,10 @@ Welcome to the youtube catalog
 <img alt="vue-youtube" src="https://raw.githubusercontent.com/anteriovieira/vue-youtube/master/media/logo.png" />
 # Stack: 
 - Vue3-vite (Composition Api - script setup)
+- Node.js
 - Pinia Store
 - No Sql FireStore (VueFire)
 - Eslint-prettier
-- Node.js
 
 Documentation
 - https://vitejs.dev/guide/
@@ -16,7 +16,7 @@ This template should help get you started developing with Vue 3 in Vite. The tem
 
 # Status
 
-Demo Version Up
+Demo Version
 
 https://master.d18kdasppqre2w.amplifyapp.com/
 

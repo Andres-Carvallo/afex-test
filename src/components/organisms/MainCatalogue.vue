@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 import TopBar from "../molecules/TopBar.vue";
 import CardGrid from "../molecules/CardGrid.vue";
 import { storeToRefs } from "pinia";

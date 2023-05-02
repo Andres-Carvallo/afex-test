@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import youtubeServices from "../services/yotube.service";
+import { useFirestore } from "vuefire";
+import { doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
 
 export const useCatalogueStore = defineStore("catalogue", {
   state: () => ({
@@ -35,7 +37,7 @@ export const useCatalogueStore = defineStore("catalogue", {
       this.youtubeList = VideoFormattedList;
       this.setYoutubeDetails();
     },
-    async setYoutubeDetails() {
+    async setYoutubeDetails(url) {
       function getVideoDuration(videoDuration) {
         if (videoDuration.includes("H")) {
           return videoDuration.split("PT")[1].split("H")[0] + "hrs";
@@ -49,8 +51,8 @@ export const useCatalogueStore = defineStore("catalogue", {
           videoDuration.split("M")[1].split("S")[0]
         );
       }
-      await this.getYoutubeVideoInfo().then((response) => {
-        if (response !== null) {
+      await this.getYoutubeVideoInfo(url).then((response) => {
+        if (response) {
           const videoDetailsList = response;
           const videoListArray = videoDetailsList.map((video) => {
             return {
@@ -80,17 +82,53 @@ export const useCatalogueStore = defineStore("catalogue", {
       };
     },
     setYoutubeVideo({ url }) {
-      const videoInfo = {
-        id: this.youtubeList.length + 1,
-        url: url,
+      const videoInList = this.youtubeList.find((video) => video.url === url);
+      if (!videoInList) {
+        const dbListSorted = this.getYoutubeDbList.sort((a, b) => a.id - b.id);
+        console.log(dbListSorted.slice(-1)[0].id);
+        const newId = dbListSorted.slice(-1)[0].id + 1;
+        const videoInfo = {
+          id: newId,
+          url: url,
+        };
+        this.youtubeList.push(videoInfo);
+        this.flags.clearInput = true;
+        return this.setYoutubeDetails(url);
+      }
+      const snackbarObject = {
+        type: "error",
+        status: true,
+        text: "Ya tienes este video en tu lista",
       };
-      this.youtubeList.push(videoInfo);
-      this.flags.clearInput = true;
+      return this.setSnackbarFlag({ snackbarObject });
     },
     deleteYoutubeVideo({ videoDbId }) {
-      this.youtubeList = this.youtubeList.filter(
-        (video) => video.id !== videoDbId
-      );
+      const db = useFirestore();
+      const listRef = doc(db, "youtube-list", "videos");
+      const fieldToDelete = {};
+      const fieldId = videoDbId;
+      fieldToDelete[fieldId] = deleteField();
+      updateDoc(listRef, fieldToDelete)
+        .then(() => {
+          console.log(videoDbId);
+          this.youtubeList = this.youtubeList.filter(
+            (video) => video.id !== videoDbId
+          );
+          const snackbarObject = {
+            type: "success",
+            status: true,
+            text: "Video eliminado con éxito",
+          };
+          this.setSnackbarFlag({ snackbarObject });
+        })
+        .catch(() => {
+          const snackbarObject = {
+            type: "error",
+            status: true,
+            text: "Ha ocurrido un error con Firebase",
+          };
+          return this.setSnackbarFlag({ snackbarObject });
+        });
     },
     setVideoDetails({ videoId }) {
       const videoDetails = this.youtubeListInfo.find(
@@ -99,7 +137,7 @@ export const useCatalogueStore = defineStore("catalogue", {
       this.mainVideoInfo = videoDetails;
       return this.mainVideoInfo;
     },
-    async getYoutubeVideoInfo() {
+    async getYoutubeVideoInfo(url) {
       let responseList;
       const mainVideoList = await this.youtubeList.map((video) => {
         if (
@@ -152,20 +190,62 @@ export const useCatalogueStore = defineStore("catalogue", {
         await youtubeServices
           .getYouTubeApi(videoIdList)
           .then((response) => {
-            this.youtubeListInfo = response.data.items;
-            responseList = response.data.items;
-            const fullYoutubeList = this.youtubeListInfo.map((info) => {
-              const source = {
-                dbId: mainVideoList.find((video) => video.videoId === info.id)
-                  .id,
+            if (response.data.items.length === this.youtubeList.length) {
+              if (url) {
+                const db = useFirestore();
+                const videoRef = doc(db, "youtube-list", "videos");
+                const videoObject = {};
+                const dbListSorted = this.getYoutubeDbList.sort(
+                  (a, b) => a.id - b.id
+                );
+                const lastId = dbListSorted.slice(-1)[0].id;
+                videoObject[lastId] = url;
+                setDoc(videoRef, videoObject, { merge: true })
+                  .then(() => {
+                    const snackbarObject = {
+                      type: "success",
+                      status: true,
+                      text: "Video guardado con éxito",
+                    };
+                    this.setSnackbarFlag({ snackbarObject });
+                  })
+                  .catch(() => {
+                    const snackbarObject = {
+                      type: "error",
+                      status: true,
+                      text: "Ha ocurrido un error con Firebase",
+                    };
+                    return setSnackbarFlag({ snackbarObject });
+                  });
+              }
+              this.youtubeListInfo = response.data.items;
+              responseList = response.data.items;
+              const fullYoutubeList = this.youtubeListInfo.map((info) => {
+                const source = {
+                  dbId: mainVideoList.find((video) => video.videoId === info.id)
+                    .id,
+                };
+                const newList = Object.assign(info, source);
+                return newList;
+              });
+              return fullYoutubeList;
+            } else {
+              this.youtubeList.pop();
+              const snackbarObject = {
+                type: "error",
+                status: true,
+                text: "Video no existe",
               };
-              const newList = Object.assign(info, source);
-              return newList;
-            });
-            return fullYoutubeList;
+              this.setSnackbarFlag({ snackbarObject });
+            }
           })
           .catch((error) => {
-            console.log(error);
+            const snackbarObject = {
+              type: "error",
+              status: true,
+              text: error,
+            };
+            this.setSnackbarFlag({ snackbarObject });
           });
       }
       return responseList;

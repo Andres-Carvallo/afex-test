@@ -1,14 +1,9 @@
 <script setup>
 import ModalHeader from "../molecules/ModalHeader.vue";
 import ModalContent from "../molecules/ModalContent.vue";
-import { useFirestore } from "vuefire";
-import { doc, updateDoc, deleteField } from "firebase/firestore";
 import { ref, defineEmits } from "vue";
 import { storeToRefs } from "pinia";
 import { useCatalogueStore } from "../../stores/catalogueStore";
-
-// DB
-const db = useFirestore();
 
 // Emits
 const emit = defineEmits(["closeModal"]);
@@ -32,7 +27,7 @@ const props = defineProps({
 // Stores
 const catalogueStore = useCatalogueStore();
 const { getYoutubeDetailInfo } = storeToRefs(catalogueStore);
-const { deleteYoutubeVideo, setSnackbarFlag } = catalogueStore;
+const { deleteYoutubeVideo } = catalogueStore;
 
 // Funcs
 function setVideoInfo() {
@@ -48,24 +43,7 @@ function setVideoInfo() {
 }
 function deleteVideo() {
   if (props.modalType === "deleteModal") {
-    const listRef = doc(db, "youtube-list", "videos");
-    const fieldToDelete = {};
-    const fieldId = props.selectedVideo;
-    fieldToDelete[fieldId] = deleteField();
-    updateDoc(listRef, fieldToDelete).catch(() => {
-      const snackbarObject = {
-        type: "error",
-        status: true,
-        text: "Ha ocurrido un error con Firebase",
-      };
-      return setSnackbarFlag({ snackbarObject });
-    });
-    const snackbarObject = {
-      type: "success",
-      status: true,
-      text: "Video eliminado con éxito",
-    };
-    setSnackbarFlag({ snackbarObject });
+    console.log(props.selectedVideo);
     deleteYoutubeVideo({ videoDbId: props.selectedVideo });
     handleChange();
   }
