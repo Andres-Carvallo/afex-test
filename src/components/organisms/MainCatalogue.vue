@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineEmits, watch } from "vue";
+import { ref, reactive, computed, defineEmits } from "vue";
 import TopBar from "../molecules/TopBar.vue";
 import CardGrid from "../molecules/CardGrid.vue";
 import { storeToRefs } from "pinia";
@@ -7,7 +7,7 @@ import { useCatalogueStore } from "../../stores/catalogueStore";
 
 // Store
 const catalogueStore = useCatalogueStore();
-const { getYoutubeInfoList } = storeToRefs(catalogueStore);
+const { getYoutubeDbList } = storeToRefs(catalogueStore);
 const { getYoutubeVideoInfo } = catalogueStore;
 
 // Emits
@@ -25,37 +25,46 @@ const handleChange = (emitType, event) => {
 const labelText = ref("Añadir nuevo video");
 const inputPlaceholder = ref("Añadir");
 const buttonLabel = ref("Añadir");
-const videosArray = ref(null);
+const videoArray = reactive({ array: null });
 
-// watchers
-watch(
-  () => getYoutubeInfoList.value,
-  (currentValue, oldValue) => {
-    if (oldValue !== null && currentValue.length !== oldValue.length) {
+// Computed
+const computedVideoList = computed(() => {
+  if (getYoutubeDbList.value) {
+    if (
+      videoArray.array === null ||
+      (videoArray.array !== null &&
+        getYoutubeDbList.value.length !== videoArray.array.length)
+    ) {
       getVideoDetails();
+      return videoArray.array;
     }
+    return videoArray.array;
   }
-);
-function getVideoDetails() {
-  getYoutubeVideoInfo().then(() => {
-    const videoDetailsList = getYoutubeInfoList.value;
-    const videoListArray = videoDetailsList.map((video) => {
-      return {
-        id: video.id,
-        thumbnail: video.snippet.thumbnails.default.url,
-        duration:
-          video.contentDetails.duration.split("PT")[1].split("M")[0] +
-          ":" +
-          video.contentDetails.duration.split("M")[1].split("S")[0],
-      };
-    });
-    videosArray.value = videoListArray;
+  return null;
+});
+
+// Funcs
+async function getVideoDetails() {
+  await getYoutubeVideoInfo().then((response) => {
+    if (response !== null) {
+      const videoDetailsList = response;
+      const videoListArray = videoDetailsList.map((video) => {
+        return {
+          dbId: video.dbId,
+          id: video.id,
+          thumbnail: video.snippet.thumbnails.default.url,
+          duration:
+            video.contentDetails.duration.split("PT")[1].split("M")[0] +
+            ":" +
+            video.contentDetails.duration.split("M")[1].split("S")[0],
+        };
+      });
+      videoArray.array = videoListArray;
+      return videoListArray;
+    }
+    return null;
   });
 }
-
-onMounted(() => {
-  getVideoDetails();
-});
 </script>
 
 <template>
@@ -65,8 +74,8 @@ onMounted(() => {
     :button-label="buttonLabel"
   />
   <CardGrid
-    v-if="videosArray"
-    :videos-array="videosArray"
+    v-if="computedVideoList"
+    :videos-array="computedVideoList"
     @set-info-modal="handleChange('setInfoModal', $event)"
     @delete-video="handleChange('deleteVideo', $event)"
   />

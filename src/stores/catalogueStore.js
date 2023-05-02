@@ -4,33 +4,45 @@ import youtubeServices from "../services/yotube.service";
 export const useCatalogueStore = defineStore("catalogue", {
   state: () => ({
     mainVideoInfo: null,
-    youtubeList: [
-      "https://www.youtube.com/watch?v=5la4Ld3hwhI&ab_channel=KEXP",
-      "https://www.youtube.com/watch?v=T8XiUrpn6u4&ab_channel=STAGES",
-      "https://www.youtube.com/watch?v=NmxFxBiCrL4&ab_channel=GhostBCVEVO",
-      "https://youtu.be/ce3J_f_rAbk",
-      "https://www.youtube.com/watch?v=jYk3aqtzjwk&ab_channel=Skithuvudet",
-    ],
+    youtubeList: null,
     youtubeListInfo: null,
     flags: {
       clearInput: false,
     },
   }),
   getters: {
+    getYoutubeDbList: (state) => state.youtubeList,
     getYoutubeInfoList: (state) => state.youtubeListInfo,
     getYoutubeDetailInfo: (state) => state.mainVideoInfo,
     getClearInputFlag: (state) => state.flags.clearInput,
   },
   actions: {
+    setYoutubeDbList({ videoList }) {
+      const VideoFormattedList = Object.entries(videoList).map((video) => {
+        return {
+          id: parseInt(video[0]),
+          url: video[1],
+        };
+      });
+      this.youtubeList = VideoFormattedList;
+    },
     setClearInputFlag({ boolean }) {
       this.flags.clearInput = boolean;
     },
     setYoutubeVideo({ url }) {
-      this.youtubeList.push(url);
+      const videoInfo = {
+        id: this.youtubeList.length + 1,
+        url: url,
+      };
+      this.youtubeList.push(videoInfo);
       this.flags.clearInput = true;
-      this.getYoutubeVideoInfo();
     },
-    setVideoDetails(videoId) {
+    deleteYoutubeVideo({ videoDbId }) {
+      this.youtubeList = this.youtubeList.filter(
+        (video) => video.id !== videoDbId
+      );
+    },
+    setVideoDetails({ videoId }) {
       const videoDetails = this.youtubeListInfo.find(
         (video) => video.id === videoId
       );
@@ -38,26 +50,54 @@ export const useCatalogueStore = defineStore("catalogue", {
       return this.mainVideoInfo;
     },
     async getYoutubeVideoInfo() {
-      const videoIdList = this.youtubeList.map((videoUrl) => {
+      let responseList;
+      const mainVideoList = await this.youtubeList.map((video) => {
         if (
-          videoUrl.includes("watch?v=") &&
-          videoUrl.includes("&ab_channel=")
+          video.url.includes("watch?v=") &&
+          video.url.includes("&ab_channel=")
         ) {
-          return videoUrl.split("watch?v=")[1].split("&ab_channel=")[0];
+          return {
+            id: video.id,
+            videoId: video.url.split("watch?v=")[1].split("&ab_channel=")[0],
+          };
         }
-        if (videoUrl.includes("youtu.be")) {
-          return videoUrl.split("https://youtu.be/")[1];
+        if (video.url.includes("youtu.be")) {
+          return {
+            id: video.id,
+            videoId: video.url.split("https://youtu.be/")[1],
+          };
         }
+        if (
+          video.url.includes("watch?v=") &&
+          !video.url.includes("&ab_channel=")
+        ) {
+          return {
+            id: video.id,
+            videoId: video.url.split("watch?v=")[1],
+          };
+        }
+      });
+      const videoIdList = mainVideoList.map((info) => {
+        return info.videoId;
       });
       await youtubeServices
         .getYouTubeApi(videoIdList)
         .then((response) => {
           this.youtubeListInfo = response.data.items;
-          return this.youtubeListInfo;
+          responseList = response.data.items;
+          const fullYoutubeList = this.youtubeListInfo.map((info) => {
+            const source = {
+              dbId: mainVideoList.find((video) => video.videoId === info.id).id,
+            };
+            const newList = Object.assign(info, source);
+            return newList;
+          });
+          return fullYoutubeList;
         })
         .catch((error) => {
           console.log(error);
         });
+      return responseList;
     },
   },
 });

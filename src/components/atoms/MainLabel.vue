@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  error: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -22,6 +26,7 @@ const props = defineProps({
     :class="{
       'main-label--title': title,
       'main-label--content': content,
+      'main-label--error': error,
     }"
   >
     {{ text }}

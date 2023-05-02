@@ -10,11 +10,26 @@ const props = defineProps({
     required: true,
     default: "",
   },
+  selectionButton: {
+    type: Boolean,
+    default: false,
+  },
+  selectionButtonSecondary: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
 <template>
-  <button class="main-button" @click="handleChange()">
+  <button
+    class="main-button"
+    :class="{
+      'main-button--selection': selectionButton,
+      'main-button--selection-secondary': selectionButtonSecondary,
+    }"
+    @click="handleChange()"
+  >
     {{ buttonLabel }}
   </button>
 </template>

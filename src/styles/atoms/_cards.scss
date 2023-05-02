@@ -8,9 +8,13 @@
     height: 100%;
   }
   &--close{
+    background-color: black;
+    padding: 6px;
+    width: 24px;
     position: absolute;
     top: 8px;
     right: 9px;
+    border-radius: 5px;
   }
   &--duration{
     padding: 4px;

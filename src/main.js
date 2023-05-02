@@ -4,6 +4,8 @@ import "./styles/main.scss";
 import router from "./router/router";
 import App from "./App.vue";
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection } from "firebase/firestore";
+import { VueFire } from "vuefire";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_KEY,
@@ -15,7 +17,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const fireBaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(fireBaseApp);
+export const youtubeListRef = collection(db, "youtube-list");
 
 // Vuetify
 import "vuetify/styles";
@@ -33,5 +37,9 @@ const pinia = createPinia();
 app.use(router);
 app.use(pinia);
 app.use(vuetify);
+app.use(VueFire, {
+  // imported above but could also just be created here
+  youtubeListRef,
+});
 
 app.mount("#app");

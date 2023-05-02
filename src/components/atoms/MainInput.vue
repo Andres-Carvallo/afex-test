@@ -11,8 +11,12 @@ const { setClearInputFlag } = catalogueStore;
 // Emits
 const emit = defineEmits(["setInputValue"]);
 const handleChange = (event) => {
-  emit("setInputValue", event.target.value);
-  inputValue.value = event.target.value;
+  if (event) {
+    emit("setInputValue", event.target.value);
+    inputValue.value = event.target.value;
+    return inputValue.value;
+  }
+  return emit("setInputValue", event);
 };
 // Data
 const inputValue = ref("");
@@ -23,6 +27,7 @@ watch(
     if (currentValue) {
       inputValue.value = "";
       setClearInputFlag({ boolean: false });
+      handleChange(null);
     }
   }
 );
@@ -41,6 +46,6 @@ const props = defineProps({
     type="text"
     :value="inputValue"
     :placeholder="placeholder"
-    @input="handleChange"
+    @input="handleChange($event)"
   />
 </template>
