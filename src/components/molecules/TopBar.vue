@@ -37,7 +37,6 @@ const props = defineProps({
 // Funcs
 
 function setVideo() {
-  console.log(mainInputValue.value);
   if (
     (mainInputValue.value &&
       mainInputValue.value.includes("watch?v=") &&

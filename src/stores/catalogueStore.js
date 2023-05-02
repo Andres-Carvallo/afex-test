@@ -84,13 +84,22 @@ export const useCatalogueStore = defineStore("catalogue", {
     setYoutubeVideo({ url }) {
       const videoInList = this.youtubeList.find((video) => video.url === url);
       if (!videoInList) {
-        const dbListSorted = this.getYoutubeDbList.sort((a, b) => a.id - b.id);
-        console.log(dbListSorted.slice(-1)[0].id);
-        const newId = dbListSorted.slice(-1)[0].id + 1;
-        const videoInfo = {
-          id: newId,
-          url: url,
-        };
+        let videoInfo;
+        if (this.getYoutubeDbList.length > 0) {
+          const dbListSorted = this.getYoutubeDbList.sort(
+            (a, b) => a.id - b.id
+          );
+          const newId = dbListSorted.slice(-1)[0].id + 1;
+          videoInfo = {
+            id: newId,
+            url: url,
+          };
+        } else {
+          videoInfo = {
+            id: 1,
+            url: url,
+          };
+        }
         this.youtubeList.push(videoInfo);
         this.flags.clearInput = true;
         return this.setYoutubeDetails(url);
@@ -110,7 +119,6 @@ export const useCatalogueStore = defineStore("catalogue", {
       fieldToDelete[fieldId] = deleteField();
       updateDoc(listRef, fieldToDelete)
         .then(() => {
-          console.log(videoDbId);
           this.youtubeList = this.youtubeList.filter(
             (video) => video.id !== videoDbId
           );

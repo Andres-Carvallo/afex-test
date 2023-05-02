@@ -43,7 +43,6 @@ function setVideoInfo() {
 }
 function deleteVideo() {
   if (props.modalType === "deleteModal") {
-    console.log(props.selectedVideo);
     deleteYoutubeVideo({ videoDbId: props.selectedVideo });
     handleChange();
   }
