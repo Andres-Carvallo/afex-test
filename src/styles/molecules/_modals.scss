@@ -13,6 +13,7 @@
 .modal-content{
   display: flex;
   &--info{
+    overflow: auto;
     margin-left: 17px;
     margin-right: 24px;
     display: flex;

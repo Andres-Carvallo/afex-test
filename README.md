@@ -6,6 +6,7 @@ Welcome to the youtube catalog
 - Pinia Store
 - No Sql FireStore (VueFire)
 - Eslint-prettier
+- Node.js
 
 Documentation
 - https://vitejs.dev/guide/
@@ -63,12 +64,13 @@ Download for VCS Marketplace:
 - Storybook Component documentation
 
 ---------------
-
+ES 
 # Catálogo Youtube
 Bienvenido al catálogo de youtube
 
 # Stack: 
 - Vue3-vite (Composition Api - script setup)
+- Node.js
 - Pinia Store
 - No Sql FireStore (VueFire)
 - Eslint-prettier
