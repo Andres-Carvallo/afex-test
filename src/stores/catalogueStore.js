@@ -38,6 +38,7 @@ export const useCatalogueStore = defineStore("catalogue", {
       this.flags.clearInput = true;
     },
     deleteYoutubeVideo({ videoDbId }) {
+      console.log(videoDbId);
       this.youtubeList = this.youtubeList.filter(
         (video) => video.id !== videoDbId
       );
@@ -52,6 +53,7 @@ export const useCatalogueStore = defineStore("catalogue", {
     async getYoutubeVideoInfo() {
       let responseList;
       const mainVideoList = await this.youtubeList.map((video) => {
+        console.log(video);
         if (
           video.url.includes("watch?v=") &&
           video.url.includes("&ab_channel=")
@@ -89,6 +91,7 @@ export const useCatalogueStore = defineStore("catalogue", {
             const source = {
               dbId: mainVideoList.find((video) => video.videoId === info.id).id,
             };
+            console.log(source);
             const newList = Object.assign(info, source);
             return newList;
           });

@@ -49,8 +49,6 @@ function setVideoInfo() {
 function deleteVideo() {
   if (props.modalType === "deleteModal") {
     const listRef = doc(db, "youtube-list", "videos");
-
-    // Remove "age" field from the document
     const fieldToDelete = {};
     const fieldId = props.selectedVideo;
     fieldToDelete[fieldId] = deleteField();

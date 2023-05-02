@@ -42,13 +42,15 @@ const props = defineProps({
 // Funcs
 function setVideo() {
   if (
-    mainInputValue.value &&
-    mainInputValue.value.includes("watch?v=") &&
-    mainInputValue.value.includes("youtube")
+    (mainInputValue.value &&
+      mainInputValue.value.includes("watch?v=") &&
+      mainInputValue.value.includes("youtube")) ||
+    mainInputValue.value.includes("youtu.be")
   ) {
     const videoRef = doc(db, "youtube-list", "videos");
     const videoObject = {};
-    videoObject[getYoutubeDbList.value.length + 1] = mainInputValue.value;
+    const newId = getYoutubeDbList.value.slice(-1)[0].id + 1;
+    videoObject[newId] = mainInputValue.value;
     setDoc(videoRef, videoObject, { merge: true });
     mainInputError.value = false;
     return setYoutubeVideo({ url: mainInputValue.value });
